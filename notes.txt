@@ -1,0 +1,493 @@
+
+-------------------------- RAM map ($FFxxxx) ---------------------------
+
+note: on the game no kandume version the ram is at $03xxxx in word ram
+
+
+
+$8002.b player facing
+	0: up
+	1: down
+	2: left
+	3: right
+$800c.w player x pixel position
+$8010.w player y pixel position
+$801c.b player x tile position
+$801d.b player y tile position
+$801e.w player position map index
+
+$9409.b nonzero = cursed?
+$940e.w player max hp (BCD)
+$9410.w player hp (BCD)
+$9412.b floor (BCD, displayed)
+$9413.b floor (hex, used internally)
+$9414.b player level
+$9416.b player armor (BCD)
+$9418.b player power (BCD, displayed)
+$941b.b immune to magic (because of anti-magic cane)
+$941c.b player food (BCD)
+$941e.b player power (hex, used internally)
+$9422.w player experience
+$9424.w player gold (BCD)
+$942d.b moves left till confusion wears off
+
+$9440-$955f inventory
+	$9440+ weapons
+	$9460+ shields
+	$9480+ helmets
+	$94a0+ armor
+	$94c0+ canes
+	$94e0+ potions
+	$9500+ scrolls
+	$9520+ rings
+	$9540+ bows
+	each item is 4 bytes long, player can hold 7 of each (so last slot is always empty)
+		byte 0: item
+			bit 7:
+				1 - equipped
+			bits 0-6:
+				00: <blank>
+				01: knife
+				02: short sword
+				03: shinobi sword
+				04: gradius
+				05: shuriken
+				06: long sword
+				07: cutlass sword
+				08: steel sword
+				09: silver sword
+				0A: lightning sword
+				0B: masamune
+				0C: dragon cutter
+				0D: excalibur
+				0E: beam saber
+				0F: blood sword
+				10: spear
+				11: lance
+				12: trident
+				13: tiger lance
+				14: skull lance
+				15: hand axe
+				16: battle axe
+				17: heavy axe
+				18: rolmillian axe
+				19: golden axe
+				1A: leather shield
+				1B: wood shield
+				1C: large shield
+				1D: steel shield
+				1E: silver shield
+				1F: platinum shield
+				20: evil shield
+				21: leather helm
+				22: chain helm
+				23: iron helm
+				24: steel helm
+				25: silver helm
+				26: hyper helm
+				27: dark helm
+				28: leather armor
+				29: ring armor
+				2A: chain armor
+				2B: scale armor
+				2C: silver armor
+				2D: battle armor
+				2E: lambada armor
+				2F: flame cane
+				30: blizzard cane
+				31: lightning cane
+				32: slow cane
+				33: hypnosis cane
+				34: anti-magic cane
+				35: kamikaze cane
+				36: pit cane
+				37: wooden cane
+				38: wooden cane
+				39: heal potion
+				3A: poison potion
+				3B: quicken potion
+				3C: chaos potion
+				3D: power up potion
+				3E: blinder potion
+				3F: slow potion
+				40: curse removal potion
+				41: digest potion
+				42: recover potion
+				43: strength up scroll
+				44: weapon pwr up scroll
+				45: newspaper
+				46: search scroll
+				47: chaos scroll
+				48: sleep scroll
+				49: teleport scroll
+				4A: curse removal scroll
+				4B: appraise scroll
+				4C: rust proof scroll
+				4D: flame ring
+				4E: blizzard ring
+				4F: lightning ring
+				50: blinder ring
+				51: food ring
+				52: power up ring
+				53: armor ring
+				54: heal ring
+				55: curse ring
+				56: golden ring
+				57: short bow
+				58: long bow
+				59: elf bow
+				5A: sagittarius bow
+				5B: evil bow
+		byte 1: name prefix
+			regular items:
+				same as byte 0
+			colored items:
+				0: <blank>
+				1: black
+				2: purple
+				3: green
+				4: pink
+				5: gray
+				6: blue
+				7: red
+				8: orange
+				9: yellow
+				A: brown
+		byte 2: weapon power/armor strength (0=cursed)
+		byte 3:
+			bits 4-7: name suffix
+				0: <blank>
+				1: sword
+				2: axe
+				3: shield
+				4: armor
+				5: helm
+				6: cane
+				7: ring
+				8: bow
+				9: ptn
+				A: scrl
+				B: lance
+			bits 0-3: ????
+
+
+
+$9114.w set nonzero to give item
+
+
+
+$8180+ items on floor table (each is $10 bytes long, $44 entries)
+	+$00.b x-tile
+	+$02.b y-tile
+	+$06.b nonzero if exists
+	+$0c.b item spawn pointer table index
+	+$0d.b item type
+		$01-$5b: as normal
+		$fc: dragon armor
+		$fd: holy goblet
+		$fe: food
+		$ff: gold
+
+
+
+
+
+
+$8600.w amount of used enemy slots
+$860c.b move counter after all enemies are killed  (overflow respawns them all)
+$8610+ enemy data ($40 bytes each)
+	+$00.b state
+		0: inactive
+		1: waiting
+		2: moving
+		3: attacking
+	+$02.b facing
+		0: up
+		1: down
+		2: left
+		3: right
+	+$04.b animation frame
+	+$05.b animation timer
+	+$06.b animation size
+	+$07.b animation interval
+	+$22.b player moves till next enemy move
+	+$25.b
+		bit 6: confused
+		bit 5: slow?
+	+$30.w type
+		00: jelly
+		01: bat
+		02: worm
+		03: magician
+		04: ice bar
+		05: snail
+		06: robot
+		07: ninja
+		08: amoeba
+		09: killer fly
+		0A: big eye
+		0B: wizard
+		0C: blue jelly
+		0D: fire tree
+		0E: insect
+		0F: shinobi
+		10: green bar
+		11: bablou
+		12: chaser
+		13: necromancer
+		14: medusa
+		15: clay
+		16: granz
+		17: floor shark
+		18: scarlet
+		19: flowster
+		1A: dune
+		1B: sasuke
+		1C: mercury
+		1D: trunadai
+		1E: chaos
+		1F: hell fish
+		20: gogon
+		21: dragon
+		22: king dragon
+		23: mimic
+		24: ghost
+	+$32.w hp
+	+$34.w XP reward
+	+$36.b AR
+	+$37.b PW
+	+$38.b nonzero if asleep (like robots)
+	+$39.b
+		bit 7: doesn't move
+		bit 4: can go in hallway
+		bit 0: enemy doesn't "slide" from tile to tile
+	+$3a.b speed  (amount of player moves between enemy move)
+	+$3c.b attack power
+
+
+
+
+
+$6000+.b level layout table
+	each level layout is 32*32/8 = $80 bytes long
+	row by row, each byte is read from high bit/left to low bit/right
+	1 is floor, 0 is wall
+
+$9600+.b level layout id per floor table
+
+$a000-$a3ff.b floor map flags
+	bit 7: secret door
+	bit 6: item present on floor
+	bit 5: revealed room
+	bit 3: revealed
+	bits 0-2:
+		0: wall
+		1: stairs left
+		2: stairs right
+		3: hallway floor
+		4: main floor
+$a400-$a7ff.b floor tile map
+	bit 7: alarm
+	bit 6: pit
+	bit 4: revealed
+	bits 0-3:
+		0: blank
+		1: upper wall
+		2: top shadow
+		3: top-left shadow
+		4: top-right shadow
+		5: bottom-left shadow
+		6: left shadow
+		7: top-left corner shadow
+		8: left wall (on right)
+		9: stairs left
+		A: stairs right
+		B: stairs down
+		C: stairs up
+		D: partially open pit
+		E: fully open pit
+		F: triggered alarm
+
+
+$b000.w amount of main floor tiles on map
+$b002+.w indexes to each main floor tile
+
+
+
+$f7e0-$f85f.w - palette, copied to CRAM
+$f860-$f8df.w - palette (another)
+
+
+
+$ff70- - stack
+
+
+$ffc0.w - game mode (multiples of 4, goes init/main)
+	00: sega logo
+	08: title screen
+	10: intro
+	18: main game
+	20: game over
+	28: ending
+
+
+
+
+
+------------------------- ROM data -------------------------------
+
+
+$0047be+.w - tilemap patterns for each $a000-tile
+	BG B lower layer, contains the floor and lower half of the stairs
+	each entry is $0c bytes long (6 words long), column by column
+$0047fa+.w - tilemap patterns for each $a400-tile
+	BG A upper layer, contains the walls, shadows, and upper half of the stairs
+$0048ba+.w - tilemap patterns for each $a400-tile (on floor 31)
+
+
+
+$005318+ - levelup experience table
+
+
+
+$009ea6+.w - enemy spawn pointer table (low word only, high is $00)
+	index is (floor_num - 1) & $7e
+	the pointed data is 4 bytes which determine the possible enemy spawns
+
+
+$00a08e+.b - enemy attacks table
+	each entry is 4 bytes, one is randomly selected
+	the slot holding the attack IS SIGNIFICANT
+	$00 indicates no attack
+	byte 0 - unranged attack
+		$80 - normal attack
+		$82 - steal gold (or normal attack if no gold)
+		$84 - randomly steal items (any and all, not just equippables)
+		$86 - randomly steal food
+	byte 1 - ranged attack
+		$80 - normal attack
+		$82 - freeze
+		$84 - randomly melt gear
+	byte 2 - magic attack 1
+		$80 - fire
+		$82 - blizzard
+		$84 - thunder
+		$86 - blindness
+		$88 - steal PW
+		$8a - teleport
+	byte 3 - magic attack 2
+		$80 - chaos
+		$82 - sleep
+		$84 - steal max hp
+		$86 - randomly duplicate
+
+
+$009ffa+.l - enemy +$38+ tbl
+	for each enemy:
+		byte - $00=regular enemy, $ff=robot enemy
+		byte - +$39 flags
+		byte - speed
+		byte - ?
+$00a126+.w - enemy HP table
+$00a170+.w - enemy XP reward table
+$00a1ba+.b - enemy stat table (2 bytes per enemy, AR then PW)
+$00a526+.b - enemy attack power table
+
+
+
+$00cc4c+.b - item table (3 bytes per entry)
+	the first item is id 1
+	each value is written to bytes 1-3 of the inventory
+	item IDs <=$2e and >=$57 are randomly cursed
+
+
+
+
+$00f4ee+.w item spawn pointer table (low word only, high is $00)
+	item tables seem to be sorted by category (there are $10 entries)
+	pointed data:
+		for each item set:
+			byte - floor number upper range
+			byte - amount of item selections
+			xx bytes - possible item ids
+		for example, if the first bytes of the first two sets were $04,$09,
+			the first set would be for floors 1-4
+			and the second set would be for floors 5-9
+			the final entry is indicated with >=$1e
+
+
+
+
+$010452+.w - level layout main room table (low word only, high is $01)
+	pointed data:
+		terminated with >=$80, otherwise
+		byte 0: x
+		byte 1: y
+		byte 2: width
+		byte 3: height
+
+$0108be+.w - level layout stair location table
+	each entry is an index to $a000 in RAM
+	if the entry directly previous is #$4, then these are right stairs,
+		otherwise, left stairs
+
+$0108f8+.w - level layout pit location table
+	each entry is an index to $a400 in RAM
+	only level layout ids divisible by 3 (3, 6, 9, 12, etc.) have pits
+	to get the index to this table, ((level_layout_id / 3) - 1) << 1
+
+$01090a+.w - level layout alarm location table
+	each entry is an index to $a400 in RAM
+	only level layout ids divisible by 4 have alarms
+	to get the index to this table, ((level_layout_id / 4) - 1) << 1
+
+$010918+ - LZSS compressed level layouts (decompressed to RAM $6000)
+
+
+
+---------------------------- ROM routines --------------------------
+
+
+
+$000640 - decompress LZSS data
+	A0 - source
+	A1 - $1000-byte LZ buffer  (initial dest index $fee)
+	A4 - destination
+	source data format:
+		word - compressed data size - 1
+		for each 8 blocks:
+			byte - block flags (high bit to low bit)
+				0: lookback
+					word - 
+						bits 15-4: LZ buffer source index
+						bits 0-3: data copy size - 3
+				1: constant byte
+					byte - data
+	the game does not clear the LZ buffer before decompression,
+		but the compressed data still relies on it being zeroed
+
+
+
+
+$0093cc - select and init enemy attack
+
+
+
+
+$00ee34 - load map
+	$00ee34 - clear $a000-$a7ff
+	$00ee44 - unpack map data to $a000
+	$00ee9a - set main floor tiles at $a000
+	$00eeee - bsr $ef3c - place stairs
+	$00eef8 - bsr $ef88 - place secret doors (pretty sure)
+	$00eefc - bsr $f0ba - set up $a400
+	$00ef00 - bsr $f042 - place pit tile
+		pits won't appear on floor 1, 2, or >$1d
+	$00ef04 - bsr $f086 - place alarm tile
+	$00ef08 - bsr $f204 - set up $b000
+	$00ef0c - bsr $f22a - set up initial player position
+	after this it loads the floor items
+
+
+
+

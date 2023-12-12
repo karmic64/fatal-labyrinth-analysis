@@ -1,0 +1,6 @@
+FatalLabyrinth.bin
+
+*.exe
+gen-maps
+gen-tbl
+print-info
